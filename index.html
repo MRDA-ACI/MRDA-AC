@@ -105,9 +105,9 @@
 </div>
 
 <!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="firebase-app"></script>
+<script src="firebase-app"></script>
+<script src="firebase-app"></script>
 
 <!-- Firebase Initialization -->
 <script>
@@ -150,6 +150,16 @@
       alert(`Welcome ${role} ${user.email}`);
 
       // Redirect to dashboard
+      window.location.href = "dashboard.html";
+
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+</script>
+
+</body>
+</html>  // Redirect to dashboard
       window.location.href = "dashboard.html";
 
     } catch (error) {
