@@ -130,7 +130,7 @@
 
 <!-- Login Logic -->
 <script>
-const loginBtn = document.getElementById("loginBtn");
+const loginBtn = document.getElementById("LoginBtn");
 
 loginBtn.addEventListener("click", async () => {
   const email = document.getElementById("email").value;
@@ -141,7 +141,11 @@ loginBtn.addEventListener("click", async () => {
     const user = userCredential.user;
 
     const doc = await db.collection("users").doc(user.uid).get();
-    const role = doc.exists ? doc.data().role : "Student";
+    let role = "Student";
+
+    if (doc.exists) {
+      role = doc.data().role;
+    }
 
     alert("Login success!");
     window.location.href = "dashboard.html";
@@ -154,12 +158,7 @@ loginBtn.addEventListener("click", async () => {
 </script>
 
 </body>
-</html>}
-});
-</script>
-
-</body>
-</html>dy>
+</html>/html>dy>
 </html>sole.log(error);
   });
 </script>
