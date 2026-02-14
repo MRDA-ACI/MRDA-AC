@@ -97,7 +97,7 @@
   <input type="text" placeholder="Email" id="email">
   <input type="password" placeholder="Password" id="password">
 
-  <button id="Login">Login</button>
+  <button id="LoginBtn">Login</button>
 
   <div class="footer">
     © MRDA Academic Center Inc.
@@ -144,6 +144,8 @@
       // Get role from Firestore
       const doc = await db.collection("users").doc(user.uid).get();
       const role = doc.exists ? doc.data().role : "Student";
+      const role = doc.exists ? doc.data().role : "Teacher";
+      const role = doc.exists ? doc.data().role : "Staff";
 
       alert(`Welcome ${role} ${user.email}`);
 
