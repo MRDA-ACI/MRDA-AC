@@ -1,0 +1,21 @@
+{
+  "name": "MRDA AcademeAccess",
+  "short_name": "MRDA",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#1e3cff",
+  "theme_color": "#1e3cff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

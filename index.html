@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRDA AcademeAccess</title>
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e3cff">
+
+  <style>
+    /* Body style */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0a1fb0, #1e3cff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px; /* Extra space so the white box never touches edges */
+    }
+
+    /* White login box */
+    .container {
+      background: white;
+      width: 100%;
+      max-width: 360px;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+      text-align: center;
+      margin: 20px; /* Space from screen edges */
+    }
+
+    /* Logo */
+    .logo {
+      width: 150px;
+      margin-bottom: -20px;
+    }
+
+    /* Heading */
+    h2 {
+      color: #0a1fb0;
+      margin-bottom: 10px;
+    }
+
+    /* Input fields */
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #1e3cff;
+    }
+
+    /* Login button */
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 12px;
+      border: none;
+      background: #1e3cff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0a1fb0;
+    }
+
+    /* Footer text */
+    .footer {
+      margin-top: 15px;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <!-- Replace with your school logo -->
+  <img src="logo.png" class="logo" alt="MRDA Logo">
+
+  <h2>MRDA AcademeAccess</h2>
+
+  <input type="text" placeholder="Username">
+  <input type="password" placeholder="Password">
+
+  <button>Login</button>
+
+  <div class="footer">
+    © MRDA Academic Center Inc.
+  </div>
+</div>
+
+<!-- Register service worker for PWA -->
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('serviceworker.js');
+}
+</script>
+
+</body>
+</html>
