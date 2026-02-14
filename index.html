@@ -97,7 +97,7 @@
   <input type="text" placeholder="Email" id="email">
   <input type="password" placeholder="Password" id="password">
 
-  <button id="LoginBtn">Login</button>
+  <button id="loginBtn">Login</button>
 
   <div class="footer">
     © MRDA Academic Center Inc.
@@ -105,9 +105,9 @@
 </div>
 
 <!-- Firebase SDK -->
-<script src="firebase-app"></script>
-<script src="firebase-app"></script>
-<script src="firebase-app"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
 <!-- Firebase Initialization -->
 <script>
@@ -144,8 +144,6 @@
       // Get role from Firestore
       const doc = await db.collection("users").doc(user.uid).get();
       const role = doc.exists ? doc.data().role : "Student";
-      const role = doc.exists ? doc.data().role : "Teacher";
-      const role = doc.exists ? doc.data().role : "Staff";
 
       alert("Login success!");
       window.location.href = "dashboard.html";
@@ -157,16 +155,14 @@
 
 </body>
 </html>
-
-</body>
-</html>  // Redirect to dashboard
-      window.location.href = "dashboard.html";
-
-    } catch (error) {
-      alert(error.message);
-    }
+} catch (error) {
+   alert(error.code + " : " + error.message);
+   console.log(error);
   });
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
