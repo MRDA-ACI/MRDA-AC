@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MRDA AcademeAccess</title>
-
-  <!-- PWA manifest -->
+  <title>MRDA AcademeAccess Login</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1e3cff">
-
+  
   <style>
-    /* Body style */
+    /* Basic reset and body */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -18,98 +16,112 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      padding: 10px; /* Extra space so the white box never touches edges */
+      height: 100vh;
     }
 
-    /* White login box */
-    .container {
+    /* Login container */
+    .login-box {
       background: white;
-      width: 100%;
-      max-width: 360px;
-      padding: 30px 25px;
+      padding: 30px;
       border-radius: 16px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-      text-align: center;
-      margin: 20px; /* Space from screen edges */
-    }
-
-    /* Logo */
-    .logo {
-      width: 150px;
-      margin-bottom: -20px;
-    }
-
-    /* Heading */
-    h2 {
-      color: #0a1fb0;
-      margin-bottom: 10px;
-    }
-
-    /* Input fields */
-    input {
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-box img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    .login-box input {
+      width: 100%;
       padding: 12px;
       margin: 10px 0;
-      border-radius: 12px;
+      border-radius: 10px;
       border: 1px solid #ccc;
       font-size: 16px;
-      outline: none;
     }
 
-    input:focus {
-      border-color: #1e3cff;
-    }
-
-    /* Login button */
-    button {
+    .login-box button {
       width: 100%;
-      padding: 12px;
-      margin-top: 12px;
-      border-radius: 12px;
+      padding: 14px;
+      margin-top: 15px;
       border: none;
-      background: #1e3cff;
+      border-radius: 12px;
+      background-color: #1e3cff;
       color: white;
       font-size: 16px;
       cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
-    button:hover {
-      background: #0a1fb0;
-    }
-
-    /* Footer text */
-    .footer {
-      margin-top: 15px;
-      font-size: 12px;
-      color: #777;
+    .login-box button:hover {
+      background-color: #0a1fb0;
     }
   </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="login-box">
   <!-- Replace with your school logo -->
-  <img src="logo.png" class="logo" alt="MRDA Logo">
-
-  <h2>MRDA AcademeAccess</h2>
-
-  <input type="text" placeholder="Username">
-  <input type="password" placeholder="Password">
-
-  <button>Login</button>
-
-  <div class="footer">
-    © MRDA Academic Center Inc.
-  </div>
+  <img src="https://i.imgur.com/jy3vL7M.png" alt="MRDA Logo">
+  <input type="text" placeholder="Email" id="email">
+  <input type="password" placeholder="Password" id="password">
+  <button id="loginBtn">Login</button>
 </div>
 
-<!-- Register service worker for PWA -->
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- Firebase Initialization -->
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('serviceworker.js');
-}
+  // Firebase config (your project)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAtBlO4Iwj5TMYlvwQeENndd7fcV-lyXl4",
+    authDomain: "mrda-pwa.firebaseapp.com",
+    projectId: "mrda-pwa",
+    storageBucket: "mrda-pwa.firebasestorage.app",
+    messagingSenderId: "59701076462",
+    appId: "1:59701076462:web:be714b43e3f04d61c32eff",
+    measurementId: "G-VDJW06X9PH"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+
+<!-- Login Logic -->
+<script>
+  const loginBtn = document.getElementById("loginBtn");
+
+  loginBtn.addEventListener("click", async () => {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      // Firebase authentication
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+
+      // Get role from Firestore
+      const doc = await db.collection("users").doc(user.uid).get();
+      const role = doc.exists ? doc.data().role : "Student";
+
+      alert(`Welcome ${role} ${user.email}`);
+
+      // Redirect to dashboard
+      window.location.href = "dashboard.html";
+
+    } catch (error) {
+      alert(error.message);
+    }
+  });
 </script>
 
 </body>
