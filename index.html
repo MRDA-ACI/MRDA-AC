@@ -130,9 +130,9 @@
 
 <!-- Login Logic -->
 <script>
-console.log("SCRIPT RUNNING");
+console.log("SCRIPT RUNNING"); 
 const loginBtn = document.getElementById("loginBtn");
-
+try 
 loginBtn.addEventListener("click", async () => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
@@ -151,16 +151,15 @@ loginBtn.addEventListener("click", async () => {
     alert("Login success!");
     window.location.href = "dashboard.html";
 
-  } catch (error) 
+  } catch (error) {
     alert(error.code + " : " + error.message);
     console.log(error);
   }
-);
+});
 </script>
 
 </body>
-</html>>>);
-  });
+</html>});
 </script>
 
 </body>
