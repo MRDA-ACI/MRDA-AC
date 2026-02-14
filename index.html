@@ -130,25 +130,31 @@
 
 <!-- Login Logic -->
 <script>
-  const loginBtn = document.getElementById("loginBtn");
+const loginBtn = document.getElementById("loginBtn");
 
-  loginBtn.addEventListener("click", async () => {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+loginBtn.addEventListener("click", async () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-    try {
-      // Firebase authentication
-      const userCredential = await auth.signInWithEmailAndPassword(email, password);
-      const user = userCredential.user;
+  try {
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+    const user = userCredential.user;
 
-      // Get role from Firestore
-      const doc = await db.collection("users").doc(user.uid).get();
-      const role = doc.exists ? doc.data().role : "Student";
+    const doc = await db.collection("users").doc(user.uid).get();
+    const role = doc.exists ? doc.data().role : "Student";
 
-      alert("Login success!");
-      window.location.href = "dashboard.html";
-} catch (error) {
-   alert(error.code + " : " + error.message);
+    alert("Login success!");
+    window.location.href = "dashboard.html";
+
+  } catch (error) {
+    alert(error.code + " : " + error.message);
+    console.log(error);
+  }
+});
+</script>
+
+</body>
+</html>+ " : " + error.message);
    console.log(error);
   });
 </script>
