@@ -135,25 +135,35 @@ loginBtn.addEventListener("click", async () => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  try {
-    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-    const user = userCredential.user;
+try {
+  const userCredential = await auth.signInWithEmailAndPassword(email, password);
+  const user = userCredential.user;
 
-    const doc = await db.collection("users").doc(user.uid).get();
-    let role = "Student";
+  // Get role from Firestore
+  const doc = await db.collection("users").doc(user.uid).get();
 
-    if (doc.exists) {
-      role = doc.data().role;
-    }
+  let role = "Student";
 
-    alert("Login success!");
-    window.location.href = "dashboard.html";
-
-  } catch (error) {
-    alert(error.code + " : " + error.message);
-    console.log(error);
+  if (doc.exists) {
+    role = doc.data().role;
   }
-});
+
+  // Show success alert
+  alert("Login successful!");
+
+  // Redirect based on role
+  if (role === "Student") {
+    window.location.href = "student.html";
+  } else if (role === "Teacher") {
+    window.location.href = "teacher.html";
+  } else {
+    window.location.href = "staff.html";
+  }
+
+} catch (error) {
+  alert(error.code + " : " + error.message);
+}
+  });
 </script>
 
 </body>
