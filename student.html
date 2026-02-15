@@ -70,6 +70,29 @@
       font-size: 18px;
       transition: transform 0.2s, box-shadow 0.2s;
     }
+
+    /* Reset all buttons */
+     button {
+      all: unset;         /* Remove default styles */
+      display: flex;      /* Align icon + text if needed */
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 12px;
+      padding: 12px;
+      background: white;
+      color: #1e3cff;
+      font-size: 16px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      width: 90%;
+      margin: 10px auto;
+      text-align: center;
+    }
+
+    /* Hover effect */
+    button:hover {
+      background: #e0e0e0;
+    }
     
     .card:hover {
       transform: translateY(-5px);
