@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Dashboard</title>
+  <title>MRDA Student Dashboard</title>
 
-  <!-- PWA manifest -->
+  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1e3cff">
 
@@ -15,50 +15,57 @@
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #0a1fb0, #1e3cff);
       min-height: 100vh;
-      color: #fff;
+      color: white;
     }
 
     header {
-      background-color: #1e3cff;
-      padding: 20px;
       text-align: center;
-      font-size: 24px;
+      padding: 18px;
+      font-size: 20px;
       font-weight: bold;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.2);
     }
 
-    .dashboard-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+    .container {
       padding: 20px;
-      gap: 20px;
+    }
+
+    .welcome {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
     }
 
     .card {
-      background-color: white;
+      background: white;
       color: #1e3cff;
-      width: 80%;
-      max-width: 300px;
-      text-align: center;
+      border-radius: 15px;
       padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-      cursor: pointer;
+      text-align: center;
       font-weight: bold;
-      font-size: 18px;
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      cursor: pointer;
     }
 
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+    .card:active {
+      transform: scale(0.96);
     }
 
-    @media (min-width: 480px) {
-      .card {
-        width: 45%;
-      }
+    .logout {
+      margin-top: 25px;
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: white;
+      color: #1e3cff;
+      font-weight: bold;
+      font-size: 15px;
     }
   </style>
 </head>
@@ -66,23 +73,30 @@
 
 <header>Student Dashboard</header>
 
-<div class="dashboard-container">
-  <div class="card" onclick="location.href='announcements.html'">Announcements</div>
-  <div class="card" onclick="location.href='schedule.html'">Schedule</div>
-  <div class="card" onclick="location.href='zoom.html'">Zoom Meetings</div>
-  <div class="card" onclick="location.href='messages.html'">Messages</div>
-  <div class="card" onclick="location.href='study-timer.html'">Study Timer</div>
-  <div class="card" onclick="location.href='mentalhealth.html'">Mental Health</div>
-  <div class="card" onclick="location.href='profile.html'">My Profile</div>
-  <div class="card" onclick="logout()">Logout</div>
+<div class="container">
+  <div class="welcome" id="welcome">Welcome!</div>
+
+  <div class="grid">
+    <div class="card" onclick="go('announcements.html')">Announcements</div>
+    <div class="card" onclick="go('schedule.html')">Schedule</div>
+    <div class="card" onclick="go('zoom.html')">Zoom Meetings</div>
+    <div class="card" onclick="go('messages.html')">Messages</div>
+    <div class="card" onclick="go('study.html')">Study Timer</div>
+    <div class="card" onclick="go('mental.html')">Mental Health</div>
+  </div>
+
+  <button class="logout" onclick="logout()">Logout</button>
 </div>
 
-<!-- Firebase SDK -->
+
+<!-- ✅ Firebase SDK (Correct, clean, no errors) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
+
 <script>
+  /* Firebase Config */
   const firebaseConfig = {
     apiKey: "AIzaSyAtBlO4Iwj5TMYlvwQeENndd7fcV-lyXl4",
     authDomain: "mrda-pwa.firebaseapp.com",
@@ -92,18 +106,30 @@
     appId: "1:59701076462:web:be714b43e3f04d61c32eff",
     measurementId: "G-VDJW06X9PH"
   };
+
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
 
-  // Redirect if not logged in
-  auth.onAuthStateChanged(user => {
-    if (!user) {
+
+  /* Show logged-in user */
+  auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      document.getElementById("welcome").innerText =
+        "Welcome, " + user.email;
+    } else {
       window.location.href = "index.html";
     }
   });
 
-  // Logout function
+
+  /* Navigation */
+  function go(page) {
+    window.location.href = page;
+  }
+
+
+  /* Logout */
   function logout() {
     auth.signOut().then(() => {
       window.location.href = "index.html";
@@ -112,15 +138,7 @@
 </script>
 
 </body>
-</html>ipt>
-
-</body>
-</html>rebasejs/9.22.2/firebase-firestore-compat.js"></script>
-
-<script>
-  // Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyAtBlO4Iwj5TMYlvwQeENndd7fcV-lyXl4",
+</html>dd7fcV-lyXl4",
     authDomain: "mrda-pwa.firebaseapp.com",
     projectId: "mrda-pwa",
     storageBucket: "mrda-pwa.appspot.com",
