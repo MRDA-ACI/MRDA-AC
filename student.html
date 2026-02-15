@@ -88,37 +88,44 @@
   <button class="logout" onclick="logout()">Logout</button>
 </div>
 
-
-<!-- ✅ Firebase SDK (Correct, clean, no errors) -->
+<script>
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
-
 <script>
-  /* Firebase Config */
-  const firebaseConfig = {
-    apiKey: "AIzaSyAtBlO4Iwj5TMYlvwQeENndd7fcV-lyXl4",
-    authDomain: "mrda-pwa.firebaseapp.com",
-    projectId: "mrda-pwa",
-    storageBucket: "mrda-pwa.appspot.com",
-    messagingSenderId: "59701076462",
-    appId: "1:59701076462:web:be714b43e3f04d61c32eff",
-    measurementId: "G-VDJW06X9PH"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyAtBlO4Iwj5TMYlvwQeENndd7fcV-lyXl4",
+  authDomain: "mrda-pwa.firebaseapp.com",
+  projectId: "mrda-pwa",
+  storageBucket: "mrda-pwa.appspot.com",
+  messagingSenderId: "59701076462",
+  appId: "1:59701076462:web:be714b43e3f04d61c32eff",
+  measurementId: "G-VDJW06X9PH"
+};
 
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
+// Redirect if not logged in
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    window.location.href = "index.html";
+  }
+});
 
-  /* Show logged-in user */
-  auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      document.getElementById("welcome").innerText =
-        "Welcome, " + user.email;
-    } else {
-      window.location.href = "index.html";
+// Logout
+function logout() {
+  auth.signOut().then(() => {
+    window.location.href = "index.html";
+  });
+}
+</script>
+
+</body>
+</html>>    window.location.href = "index.html";
     }
   });
 
