@@ -137,35 +137,44 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
 <script>
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "mrda-pwa.firebaseapp.com",
-    projectId: "mrda-pwa",
-    storageBucket: "mrda-pwa.appspot.com",
-    messagingSenderId: "59701076462",
-    appId: "1:59701076462:web:be714b43e3f04d61c32eff"
-  };
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "mrda-pwa.firebaseapp.com",
+  projectId: "mrda-pwa",
+  storageBucket: "mrda-pwa.appspot.com",
+  messagingSenderId: "59701076462",
+  appId: "1:59701076462:web:be714b43e3f04d61c32eff"
+};
 
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
-  auth.onAuthStateChanged(user => {
-    if (!user) {
-      window.location.href = "index.html";
-    }
+// AUTH CHECK + FIX REDIRECT
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // SHOW USER EMAIL
+    document.getElementById("username").innerText = user.email;
+  } else {
+    setTimeout(() => {
+      if (!firebase.auth().currentUser) {
+        window.location.href = "index.html";
+      }
+    }, 1000);
+  }
+});
+
+// SIDEBAR
+function toggleNav() {
+  document.getElementById("mySidebar").classList.toggle("active");
+  document.getElementById("overlay").classList.toggle("active");
+}
+
+// LOGOUT
+function logout() {
+  auth.signOut().then(() => {
+    window.location.href = "index.html";
   });
-
-  function toggleNav() {
-    document.getElementById("mySidebar").classList.toggle("active");
-    document.getElementById("overlay").classList.toggle("active");
-  }
-
-  function logout() {
-    auth.signOut().then(() => {
-      window.location.href = "index.html";
-    });
-  }
+}
 </script>
-
 </body>
 </html>
