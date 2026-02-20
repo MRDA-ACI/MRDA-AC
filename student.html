@@ -18,21 +18,25 @@
       min-height: 100vh;
     }
 
-    /* Sidebar styling */
+    /* Sidebar (OVERLAY STYLE) */
     .sidebar {
-      height: 100%;
-      width: 0;
       position: fixed;
       top: 0;
-      left: 0;
+      left: -260px; /* hidden */
+      width: 260px;
+      height: 100%;
       background-color: #1e3cff;
-      overflow-x: hidden;
-      transition: 0.3s;
       padding-top: 60px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    .sidebar.active {
+      left: 0; /* slide in */
     }
 
     .sidebar a {
-      padding: 10px 15px;
+      padding: 12px 20px;
       text-decoration: none;
       font-size: 18px;
       color: white;
@@ -44,33 +48,49 @@
       background-color: #0a1fb0;
     }
 
-    .sidebar .closebtn {
+    .closebtn {
       position: absolute;
       top: 15px;
-      right: 25px;
-      font-size: 30px;
-      margin-left: 50px;
+      right: 20px;
+      font-size: 28px;
       cursor: pointer;
+    }
+
+    /* Dark overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
     }
 
     /* Main content */
     .main {
       padding: 20px;
-      transition: margin-left 0.3s;
-      margin-left: 0;
+      margin-top: 60px;
     }
 
-    /* Hamburger menu */
+    /* Hamburger button */
     .openbtn {
       font-size: 24px;
       cursor: pointer;
       background-color: #1e3cff;
       color: white;
       border: none;
-      padding: 15px;
+      padding: 12px 15px;
       position: fixed;
       top: 15px;
       left: 15px;
+      border-radius: 8px;
+      z-index: 1100;
     }
 
     .history {
@@ -78,23 +98,16 @@
       color: #1e3cff;
       padding: 20px;
       border-radius: 12px;
-      margin-top: 60px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-
-    @media (max-width: 600px) {
-      .history {
-        margin-top: 80px;
-      }
     }
   </style>
 </head>
 <body>
 
-<button class="openbtn" onclick="openNav()">☰ Menu</button>
+<button class="openbtn" onclick="toggleNav()">☰</button>
 
 <div class="sidebar" id="mySidebar">
-  <span class="closebtn" onclick="closeNav()">&times;</span>
+  <span class="closebtn" onclick="toggleNav()">&times;</span>
   <a href="student.html">Dashboard</a>
   <a href="announcements.html">Announcements</a>
   <a href="schedule.html">Schedule</a>
@@ -103,8 +116,10 @@
   <a href="study-timer.html">Study Timer</a>
   <a href="mentalhealth.html">Mental Health</a>
   <a href="profile.html">Profile</a>
-  <a href="index.html" onclick="logout()">Logout</a>
+  <a href="#" onclick="logout()">Logout</a>
 </div>
+
+<div class="overlay" id="overlay" onclick="toggleNav()"></div>
 
 <div class="main">
   <div class="history">
@@ -112,9 +127,7 @@
     <p>
       MRDA Academic Center Inc. was established in 2018 in Calabanga, Camarines Sur. 
       With a commitment to excellence, the institution has grown into a beacon of education, 
-      empowering students from diverse backgrounds to reach their full potential. 
-      Our mission is to foster holistic development, ensuring each learner excels academically, 
-      socially, and personally.
+      empowering students from diverse backgrounds to reach their full potential.
     </p>
   </div>
 </div>
@@ -122,19 +135,17 @@
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
 <script>
-  // Firebase config
   const firebaseConfig = {
-    apiKey: "AIzaSyAtBlO4Iwj5TMYlvwQeENndd7fcV-lyXl4",
+    apiKey: "YOUR_API_KEY",
     authDomain: "mrda-pwa.firebaseapp.com",
     projectId: "mrda-pwa",
     storageBucket: "mrda-pwa.appspot.com",
     messagingSenderId: "59701076462",
-    appId: "1:59701076462:web:be714b43e3f04d61c32eff",
-    measurementId: "G-VDJW06X9PH"
+    appId: "1:59701076462:web:be714b43e3f04d61c32eff"
   };
+
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
 
@@ -144,14 +155,9 @@
     }
   });
 
-  function openNav() {
-    document.getElementById("mySidebar").style.width = "250px";
-    document.querySelector(".main").style.marginLeft = "250px";
-  }
-
-  function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-    document.querySelector(".main").style.marginLeft = "0";
+  function toggleNav() {
+    document.getElementById("mySidebar").classList.toggle("active");
+    document.getElementById("overlay").classList.toggle("active");
   }
 
   function logout() {
