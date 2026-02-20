@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Announcements</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(135deg,#0a1fb0,#1e3cff);
+  color:white;
+}
+
+.main{
+  padding:20px;
+  padding-bottom:90px;
+}
+
+.header{
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+/* Calendar */
+.calendar{
+  background:white;
+  color:#1e3cff;
+  border-radius:16px;
+  padding:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+.month{
+  text-align:center;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.days{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:5px;
+  font-size:12px;
+}
+
+.day{
+  text-align:center;
+  padding:10px 0;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.day:hover{
+  background:#eef1ff;
+}
+
+.today{
+  background:#1e3cff;
+  color:white;
+  font-weight:bold;
+}
+
+.event{
+  background:#ffcc00;
+  color:black;
+  font-weight:bold;
+}
+
+/* Cards */
+.card{
+  background:white;
+  color:#1e3cff;
+  border-radius:16px;
+  padding:15px;
+  margin-top:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Navbar */
+.navbar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:70px;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  border-top:1px solid #ddd;
+}
+
+.navbar button{
+  background:none;
+  border:none;
+  color:#555;
+  font-size:12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  cursor:pointer;
+  position:relative;
+}
+
+.navbar button span{
+  font-size:22px;
+}
+
+.navbar .active{
+  color:#1e3cff;
+}
+
+/* Notification badge */
+.badge{
+  position:absolute;
+  top:5px;
+  right:15px;
+  background:red;
+  color:white;
+  font-size:10px;
+  padding:3px 6px;
+  border-radius:50%;
+}
+
+/* Modal */
+.modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-content{
+  background:white;
+  color:#1e3cff;
+  padding:20px;
+  border-radius:16px;
+  width:80%;
+}
+</style>
+</head>
+<body>
+
+<div class="main">
+<div class="header">Announcements & Activities</div>
+
+<div class="calendar">
+<div class="month" id="monthYear"></div>
+<div class="days" id="calendarDays"></div>
+</div>
+
+<div id="announcementList"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="eventModal">
+  <div class="modal-content" id="modalContent"></div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="navbar">
+<button onclick="go('student.html')">
+<span>🏠</span>Home
+</button>
+
+<button class="active">
+<span>📢</span>Announce
+<span class="badge" id="notifyBadge">3</span>
+</button>
+
+<button onclick="go('study-timer.html')">
+<span>⏱</span>Timer
+</button>
+
+<button onclick="go('messages.html')">
+<span>💬</span>Messages
+</button>
+
+<button onclick="go('profile.html')">
+<span>👤</span>Profile
+</button>
+</div>
+
+<script>
+// EVENTS DATA
+const events = {
+  "2026-02-28": {
+    title: "4th Year Live, Love, Run",
+    details: "School fun run promoting unity and health."
+  },
+  "2026-03-09": {
+    title: "Finals Examination",
+    details: "Final exams start. Review your lessons."
+  },
+  "2026-03-10": {
+    title: "Finals Examination",
+    details: "Second day of finals."
+  },
+  "2026-03-11": {
+    title: "Finals Examination",
+    details: "Last day of finals."
+  },
+  "2026-03-22": {
+    title: "Grade 12 Graduation",
+    details: "Graduation ceremony for Grade 12 students."
+  }
+};
+
+// AUTO CALENDAR
+const today = new Date();
+const year = today.getFullYear();
+const month = today.getMonth();
+
+const monthNames = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
+];
+
+document.getElementById("monthYear").innerText =
+  monthNames[month] + " " + year;
+
+const firstDay = new Date(year, month, 1).getDay();
+const lastDate = new Date(year, month+1, 0).getDate();
+
+const calendar = document.getElementById("calendarDays");
+
+const dayHeaders = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+dayHeaders.forEach(d=>{
+  const div = document.createElement("div");
+  div.innerHTML = "<b>"+d+"</b>";
+  calendar.appendChild(div);
+});
+
+for(let i=0;i<firstDay;i++){
+  calendar.appendChild(document.createElement("div"));
+}
+
+for(let day=1;day<=lastDate;day++){
+  const dateKey =
+    year+"-"+String(month+1).padStart(2,"0")+"-"+String(day).padStart(2,"0");
+
+  const div = document.createElement("div");
+  div.classList.add("day");
+  div.innerText = day;
+
+  if(day === today.getDate()) div.classList.add("today");
+  if(events[dateKey]) div.classList.add("event");
+
+  div.onclick = ()=> showEvent(dateKey);
+  calendar.appendChild(div);
+}
+
+// SHOW EVENT
+function showEvent(date){
+  if(events[date]){
+    const event = events[date];
+    document.getElementById("modalContent").innerHTML =
+      "<h3>"+event.title+"</h3><p>"+event.details+"</p><br>" +
+      "<button onclick='setReminder(\""+event.title+"\")'>Set Reminder</button>";
+    document.getElementById("eventModal").style.display="flex";
+  }
+}
+
+document.getElementById("eventModal").onclick = ()=>{
+  document.getElementById("eventModal").style.display="none";
+};
+
+// REMINDER
+function setReminder(title){
+  if(Notification.permission !== "granted"){
+    Notification.requestPermission();
+  } else {
+    new Notification("Reminder: " + title);
+  }
+}
+
+// ANNOUNCEMENT LIST
+const list = document.getElementById("announcementList");
+Object.keys(events).forEach(date=>{
+  const card = document.createElement("div");
+  card.classList.add("card");
+  card.innerHTML =
+    "<h4>"+date+"</h4><b>"+events[date].title+
+    "</b><p>"+events[date].details+"</p>";
+  list.appendChild(card);
+});
+
+function go(page){
+  window.location.href = page;
+}
+</script>
+
+</body>
+</html>
