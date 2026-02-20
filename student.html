@@ -13,30 +13,27 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
+      display: flex;
       background: linear-gradient(135deg, #0a1fb0, #1e3cff);
       color: white;
       min-height: 100vh;
     }
 
-    /* Sidebar (OVERLAY STYLE) */
+    /* Sidebar styling */
     .sidebar {
+      height: 100%;
+      width: 0;
       position: fixed;
       top: 0;
-      left: -260px; /* hidden */
-      width: 260px;
-      height: 100%;
+      left: 0;
       background-color: #1e3cff;
+      overflow-x: hidden;
+      transition: 0.3s;
       padding-top: 60px;
-      transition: left 0.3s ease;
-      z-index: 1000;
-    }
-
-    .sidebar.active {
-      left: 0; /* slide in */
     }
 
     .sidebar a {
-      padding: 12px 20px;
+      padding: 10px 15px;
       text-decoration: none;
       font-size: 18px;
       color: white;
@@ -48,67 +45,60 @@
       background-color: #0a1fb0;
     }
 
-    .closebtn {
+    .sidebar .closebtn {
       position: absolute;
       top: 15px;
-      right: 20px;
-      font-size: 28px;
+      right: 25px;
+      font-size: 30px;
+      margin-left: 50px;
       cursor: pointer;
-    }
-
-    /* Dark overlay */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      z-index: 999;
-    }
-
-    .overlay.active {
-      display: block;
     }
 
     /* Main content */
     .main {
-      padding: 20px;
-      margin-top: 60px;
+      padding: 10px;
+      transition: margin-left 0.3s;
+      margin-left: 0;
     }
 
-    /* Hamburger button */
+    /* Hamburger menu */
     .openbtn {
       font-size: 24px;
       cursor: pointer;
       background-color: #1e3cff;
       color: white;
       border: none;
-      padding: 12px 15px;
+      padding: 15px;
       position: fixed;
       top: 15px;
       left: 15px;
-      border-radius: 8px;
-      z-index: 1100;
     }
-
+   
     .history {
       background: white;
+      text-align: center;
       color: #1e3cff;
       padding: 20px;
+      position: fixed;
       border-radius: 12px;
+      margin-top: 60px;
+      width: 83.5%;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 600px) {
+      .history {
+        margin-top: 80px;
+      }
     }
   </style>
 </head>
 <body>
 
-<button class="openbtn" onclick="toggleNav()">☰</button>
+<button class="openbtn" onclick="openNav()">☰ Menu</button>
 
 <div class="sidebar" id="mySidebar">
-  <span class="closebtn" onclick="toggleNav()">&times;</span>
-  <a href="student.html">Dashboard</a>
+  <span class="closebtn" onclick="closeNav()">&times;</span>
   <a href="announcements.html">Announcements</a>
   <a href="schedule.html">Schedule</a>
   <a href="zoom.html">Zoom Meetings</a>
@@ -116,16 +106,14 @@
   <a href="study-timer.html">Study Timer</a>
   <a href="mentalhealth.html">Mental Health</a>
   <a href="profile.html">Profile</a>
-  <a href="#" onclick="logout()">Logout</a>
+  <a href="index.html" onclick="logout()">Logout</a>
 </div>
-
-<div class="overlay" id="overlay" onclick="toggleNav()"></div>
 
 <div class="main">
   <div class="history">
-    <h2>Welcome to MRDA AcademeAccess</h2>
+    <h2>A DREAM FOR EVERYONE — MRDA ACI GROUP OF SCHOOLS BRIED HISTORY</h2>
     <p>
-      MRDA Academic Center Inc. was established in 2018 in Calabanga, Camarines Sur. 
+MRDA Academic Center Inc. was established in 2018 in Calabanga, Camarines Sur. 
       With a commitment to excellence, the institution has grown into a beacon of education, 
       empowering students from diverse backgrounds to reach their full potential.
     </p>
@@ -135,46 +123,50 @@
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
 <script>
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "mrda-pwa.firebaseapp.com",
-  projectId: "mrda-pwa",
-  storageBucket: "mrda-pwa.appspot.com",
-  messagingSenderId: "59701076462",
-  appId: "1:59701076462:web:be714b43e3f04d61c32eff"
-};
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyAtBlO4Iwj5TMYlvwQeENndd7fcV-lyXl4",
+    authDomain: "mrda-pwa.firebaseapp.com",
+    projectId: "mrda-pwa",
+    storageBucket: "mrda-pwa.appspot.com",
+    messagingSenderId: "59701076462",
+    appId: "1:59701076462:web:be714b43e3f04d61c32eff",
+    measurementId: "G-VDJW06X9PH"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = "index.html";
+    }
+  });
 
-auth.onAuthStateChanged(user => {
-  if (!user) {
-    window.location.href = "index.html";
-  }
-});
-
- function openNav() {
+  function openNav() {
     document.getElementById("mySidebar").style.width = "250px";
     document.querySelector(".main").style.marginLeft = "250px";
-}
+  }
 
- function closeNav() {
+  function closeNav() {
     document.getElementById("mySidebar").style.width = "0";
     document.querySelector(".main").style.marginLeft = "0";
-}
-  
-// SIDEBAR
-function toggleNav() {
-  document.getElementById("mySidebar").classList.toggle("active");
-  document.getElementById("overlay").classList.toggle("active");
- function logout() {
+  }
+
+  function logout() {
     auth.signOut().then(() => {
       window.location.href = "index.html";
-    }}
-  });
-}
+    });
+  }
 </script>
+
+</body>
+</html>x.html";
+    });
+  }
+</script>
+
 </body>
 </html>
