@@ -1,165 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MRDA AcademeAccess Home</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MRDA Home</title>
 
-  <!-- PWA manifest -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1e3cff">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1e3cff">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      display: flex;
-      background: linear-gradient(135deg, #0a1fb0, #1e3cff);
-      color: white;
-      min-height: 100vh;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#0a1fb0,#1e3cff);
+  color: white;
+}
 
-    /* Sidebar styling */
-    .sidebar {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background-color: #1e3cff;
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-    }
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  left: -260px;
+  top: 0;
+  width: 260px;
+  height: 100%;
+  background: #1e3cff;
+  transition: 0.3s;
+  z-index: 1001;
+}
 
-    .sidebar a {
-      padding: 10px 15px;
-      text-decoration: none;
-      font-size: 18px;
-      color: white;
-      display: block;
-      transition: 0.3s;
-    }
+.sidebar.active {
+  left: 0;
+}
 
-    .sidebar a:hover {
-      background-color: #0a1fb0;
-    }
+.sidebar a {
+  display: block;
+  padding: 12px 20px;
+  color: white;
+  text-decoration: none;
+}
 
-    .sidebar .closebtn {
-      position: absolute;
-      top: 15px;
-      right: 25px;
-      font-size: 30px;
-      margin-left: 50px;
-      cursor: pointer;
-    }
+.sidebar a:hover {
+  background: #0a1fb0;
+}
 
-    /* Main content */
-    .main {
-      padding: 10px;
-      transition: margin-left 0.3s;
-      margin-left: 0;
-    }
+.userBox {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+}
 
-    /* Hamburger menu */
-    .openbtn {
-      font-size: 24px;
-      cursor: pointer;
-      background-color: #1e3cff;
-      color: white;
-      border: none;
-      padding: 15px;
-      position: fixed;
-      top: 15px;
-      left: 15px;
-    }
-   
-    .history {
-      background: white;
-      text-align: center;
-      color: #1e3cff;
-      padding: 20px;
-      position: fixed;
-      border-radius: 12px;
-      margin-top: 60px;
-      width: 83.5%;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 1000;
+}
 
-    @media (max-width: 600px) {
-      .history {
-        margin-top: 80px;
-      }
-    }
-  </style>
+.overlay.active {
+  display: block;
+}
+
+/* MENU BUTTON */
+.menuBtn {
+  font-size: 24px;
+  padding: 12px 16px;
+  border: none;
+  background: #1e3cff;
+  color: white;
+  cursor: pointer;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+}
+
+/* MAIN CONTENT */
+.container {
+  max-width: 500px;
+  width: 70%;
+  margin: 120px auto;
+  background: white;
+  color: #1e3cff;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+h2 {
+  margin-top: 0;
+}
+</style>
 </head>
+
 <body>
 
-<button class="openbtn" onclick="openNav()">☰ Menu</button>
+<button class="menuBtn" onclick="toggleNav()">☰</button>
 
-<div class="sidebar" id="mySidebar">
-  <span class="closebtn" onclick="closeNav()">&times;</span>
+<div class="sidebar" id="sidebar">
+  <div class="userBox">
+    <h3 id="username">Loading...</h3>
+    <small>Student</small>
+  </div>
+
+  <a href="student.html">Home</a>
   <a href="announcements.html">Announcements</a>
   <a href="schedule.html">Schedule</a>
-  <a href="zoom.html">Zoom Meetings</a>
   <a href="messages.html">Messages</a>
   <a href="study-timer.html">Study Timer</a>
   <a href="mentalhealth.html">Mental Health</a>
   <a href="profile.html">Profile</a>
-  <a href="index.html" onclick="logout()">Logout</a>
+  <a href="#" onclick="logout()">Logout</a>
 </div>
 
-<div class="main">
-  <div class="history">
-    <h2>A DREAM FOR EVERYONE — MRDA ACI GROUP OF SCHOOLS BRIED HISTORY</h2>
-    <p>
-MRDA Academic Center Inc. was established in 2018 in Calabanga, Camarines Sur. 
-      With a commitment to excellence, the institution has grown into a beacon of education, 
-      empowering students from diverse backgrounds to reach their full potential.
-    </p>
-  </div>
+<div class="overlay" id="overlay" onclick="toggleNav()"></div>
+
+<div class="container">
+  <h2>Welcome to MRDA AcademeAccess</h2>
+  <p>
+    MRDA Academic Center Inc. aims to empower students through technology, 
+    providing easy access to announcements, schedules, study tools, and 
+    communication with teachers and staff. This platform supports holistic 
+    learning, time management, and mental well-being.
+  </p>
 </div>
 
-<!-- Firebase SDK -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
 <script>
-  // Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyAtBlO4Iwj5TMYlvwQeENndd7fcV-lyXl4",
-    authDomain: "mrda-pwa.firebaseapp.com",
-    projectId: "mrda-pwa",
-    storageBucket: "mrda-pwa.appspot.com",
-    messagingSenderId: "59701076462",
-    appId: "1:59701076462:web:be714b43e3f04d61c32eff",
-    measurementId: "G-VDJW06X9PH"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "mrda-pwa.firebaseapp.com",
+  projectId: "mrda-pwa"
+};
 
-  auth.onAuthStateChanged(user => {
-    if (!user) {
-      window.location.href = "index.html";
-    }
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+/* CHECK LOGIN */
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById("username").innerText = user.email;
+  } else {
+    window.location.href = "index.html";
+  }
+});
+
+/* SIDEBAR */
+function toggleNav() {
+  document.getElementById("sidebar").classList.toggle("active");
+  document.getElementById("overlay").classList.toggle("active");
+}
+
+/* LOGOUT */
+function logout() {
+  auth.signOut().then(() => {
+    window.location.href = "index.html";
   });
-
-  function openNav() {
-    document.getElementById("mySidebar").style.width = "250px";
-    document.querySelector(".main").style.marginLeft = "250px";
-  }
-
-  function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-    document.querySelector(".main").style.marginLeft = "0";
-  }
-
-  function logout() {
-    auth.signOut().then(() => {
-      window.location.href = "index.html";
-    });
-  }
+}
 </script>
 
 </body>
