@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Timer</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: linear-gradient(135deg,#0a1fb0,#1e3cff);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  text-align: center;
+  background: white;
+  color: #1e3cff;
+  padding: 30px;
+  border-radius: 16px;
+  width: 60%;
+  max-width: 350px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.timer {
+  font-size: 48px;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+input {
+  width: 80px;
+  padding: 8px;
+  margin: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+button {
+  margin: 8px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: none;
+  background: #1e3cff;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0a1fb0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Pomodoro Study Timer</h2>
+
+  <div>
+    Study: <input id="studyTime" type="number" value="25"> min  <br>
+    Break: <input id="breakTime" type="number" value="5"> min
+  </div>
+
+  <div class="timer" id="timer">25:00</div>
+
+  <button onclick="startTimer()">Start</button>
+  <button onclick="pauseTimer()">Pause</button>
+  <button onclick="resetTimer()">Reset</button>
+</div>
+
+<script>
+let timer;
+let seconds = 1500;
+let isStudy = true;
+
+function updateDisplay() {
+  let min = Math.floor(seconds / 60);
+  let sec = seconds % 60;
+  document.getElementById("timer").innerText =
+    `${min}:${sec < 10 ? "0" : ""}${sec}`;
+}
+
+function startTimer() {
+  clearInterval(timer);
+
+  if (seconds <= 0) {
+    setTime();
+  }
+
+  timer = setInterval(() => {
+    seconds--;
+
+    if (seconds <= 0) {
+      switchMode();
+    }
+
+    updateDisplay();
+  }, 1000);
+}
+
+function pauseTimer() {
+  clearInterval(timer);
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  setTime();
+  updateDisplay();
+}
+
+function setTime() {
+  let study = document.getElementById("studyTime").value;
+  seconds = study * 60;
+  isStudy = true;
+}
+
+function switchMode() {
+  if (isStudy) {
+    alert("Break time!");
+    seconds = document.getElementById("breakTime").value * 60;
+  } else {
+    alert("Back to study!");
+    seconds = document.getElementById("studyTime").value * 60;
+  }
+  isStudy = !isStudy;
+}
+
+updateDisplay();
+</script>
+
+</body>
+</html>
