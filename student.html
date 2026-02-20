@@ -149,30 +149,30 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// AUTH CHECK + FIX REDIRECT
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    // SHOW USER EMAIL
-    document.getElementById("username").innerText = user.email;
-  } else {
-    setTimeout(() => {
-      if (!firebase.auth().currentUser) {
-        window.location.href = "index.html";
-      }
-    }, 1000);
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    window.location.href = "index.html";
   }
 });
 
+ function openNav() {
+    document.getElementById("mySidebar").style.width = "250px";
+    document.querySelector(".main").style.marginLeft = "250px";
+}
+
+ function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+    document.querySelector(".main").style.marginLeft = "0";
+}
+  
 // SIDEBAR
 function toggleNav() {
   document.getElementById("mySidebar").classList.toggle("active");
   document.getElementById("overlay").classList.toggle("active");
-}
-
-// LOGOUT
-function logout() {
-  auth.signOut().then(() => {
-    window.location.href = "index.html";
+ function logout() {
+    auth.signOut().then(() => {
+      window.location.href = "index.html";
+    }}
   });
 }
 </script>
