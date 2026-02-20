@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MRDA Student Dashboard</title>
+  <title>MRDA AcademeAccess Home</title>
 
-  <!-- PWA -->
+  <!-- PWA manifest -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1e3cff">
 
@@ -14,114 +14,109 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #0a1fb0, #1e3cff);
-      min-height: 100vh;
-      color: #fff;
-    }
-                                        
-    header {
-      background-color: #1e3cff;
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    .welcome {
-      font-size: 18px;
-      background-color: goldenrod;
       color: white;
-      width: 100%;
-      max-width: 100%;
-      text-align: center;
-      border-radius: 0px;
-      font-weight: italic;
-      font-size: 25px;
-      margin-bottom: 15px;
+      min-height: 100vh;
     }
 
-    .container {
-      display: -webkit-flex;
-      flex: wrap;
-      justify-content: center;
-      padding: 0px;
-      gap: 0px;
+    /* Sidebar styling */
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #1e3cff;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
     }
-    
-    .dashboard-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 20px;
-      gap: 20px;
-    }
-    
-    .card {
-      background-color: white;
-      color: #1e3cff;
-      width: 80%;
-      max-width: 300px;
-      text-align: center;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-      cursor: pointer;
-      font-weight: bold;
+
+    .sidebar a {
+      padding: 10px 15px;
+      text-decoration: none;
       font-size: 18px;
-      transition: transform 0.2s, box-shadow 0.2s;
+      color: white;
+      display: block;
+      transition: 0.3s;
     }
 
-    /* Reset all buttons */
-     button {
-      all: unset;         /* Remove default styles */
-      display: flex;      /* Align icon + text if needed */
-      align-items: center;
-      justify-content: center;
+    .sidebar a:hover {
+      background-color: #0a1fb0;
+    }
+
+    .sidebar .closebtn {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      font-size: 30px;
+      margin-left: 50px;
       cursor: pointer;
-      border-radius: 12px;
-      padding: 12px;
+    }
+
+    /* Main content */
+    .main {
+      padding: 20px;
+      transition: margin-left 0.3s;
+      margin-left: 0;
+    }
+
+    /* Hamburger menu */
+    .openbtn {
+      font-size: 24px;
+      cursor: pointer;
+      background-color: #1e3cff;
+      color: white;
+      border: none;
+      padding: 15px;
+      position: fixed;
+      top: 15px;
+      left: 15px;
+    }
+
+    .history {
       background: white;
       color: #1e3cff;
-      font-size: 16px;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 60px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      width: 90%;
-      margin: 10px auto;
-      text-align: center;
     }
 
-    /* Hover effect */
-    button:hover {
-      background: #e0e0e0;
-    }
-    
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
-    }
-
-     @media (min-width: 480px) {
-      .card {
-        width: 45%;
+    @media (max-width: 600px) {
+      .history {
+        margin-top: 80px;
       }
     }
   </style>
 </head>
 <body>
 
-<header>Student Dashboard</header>
+<button class="openbtn" onclick="openNav()">☰ Menu</button>
 
-<div class="container">
-      <div class="welcome" id="welcome">Welcome!</div>
+<div class="sidebar" id="mySidebar">
+  <span class="closebtn" onclick="closeNav()">&times;</span>
+  <a href="student.html">Dashboard</a>
+  <a href="announcements.html">Announcements</a>
+  <a href="schedule.html">Schedule</a>
+  <a href="zoom.html">Zoom Meetings</a>
+  <a href="messages.html">Messages</a>
+  <a href="study-timer.html">Study Timer</a>
+  <a href="mentalhealth.html">Mental Health</a>
+  <a href="profile.html">Profile</a>
+  <a href="index.html" onclick="logout()">Logout</a>
 </div>
-<div class="dashboard-container">
-    <button class="card" onclick="go('profile.html')">Profile</button>
-    <button class="card" onclick="go('announcements.html')">Announcements</button>
-    <button class="card" onclick="go('schedule.html')">Schedule</button>
-    <button class="card" onclick="go('zoom.html')">Zoom Meetings</button>
-    <button class="card" onclick="go('messages.html')">Messages</button>
-    <button class="card" onclick="go('study.html')">Study Timer</button>
-    <button class="card" onclick="go('mental.html')">Mental Health</button>
-    <button class="card" onclick="logout('index.html')">Logout</button>
+
+<div class="main">
+  <div class="history">
+    <h2>Welcome to MRDA AcademeAccess</h2>
+    <p>
+      MRDA Academic Center Inc. was established in 2018 in Calabanga, Camarines Sur. 
+      With a commitment to excellence, the institution has grown into a beacon of education, 
+      empowering students from diverse backgrounds to reach their full potential. 
+      Our mission is to foster holistic development, ensuring each learner excels academically, 
+      socially, and personally.
+    </p>
+  </div>
 </div>
 
 <!-- Firebase SDK -->
@@ -130,33 +125,40 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAtBlO4Iwj5TMYlvwQeENndd7fcV-lyXl4",
-  authDomain: "mrda-pwa.firebaseapp.com",
-  projectId: "mrda-pwa",
-  storageBucket: "mrda-pwa.appspot.com",
-  messagingSenderId: "59701076462",
-  appId: "1:59701076462:web:be714b43e3f04d61c32eff",
-  measurementId: "G-VDJW06X9PH"
-};
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyAtBlO4Iwj5TMYlvwQeENndd7fcV-lyXl4",
+    authDomain: "mrda-pwa.firebaseapp.com",
+    projectId: "mrda-pwa",
+    storageBucket: "mrda-pwa.appspot.com",
+    messagingSenderId: "59701076462",
+    appId: "1:59701076462:web:be714b43e3f04d61c32eff",
+    measurementId: "G-VDJW06X9PH"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-// Redirect if not logged in
-auth.onAuthStateChanged(user => {
-  if (!user) {
-    window.location.href = "index.html";
-  }
-});
-
-// Logout
-function logout() {
-  auth.signOut().then(() => {
-    window.location.href = "index.html";
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = "index.html";
+    }
   });
-}
+
+  function openNav() {
+    document.getElementById("mySidebar").style.width = "250px";
+    document.querySelector(".main").style.marginLeft = "250px";
+  }
+
+  function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+    document.querySelector(".main").style.marginLeft = "0";
+  }
+
+  function logout() {
+    auth.signOut().then(() => {
+      window.location.href = "index.html";
+    });
+  }
 </script>
 
 </body>
