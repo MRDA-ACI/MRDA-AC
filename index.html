@@ -130,13 +130,6 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
     const data = doc.data();
 
-    if(!data.profileCompleted){
-      if(data.role==="student"){
-        window.location.href="student-setup.html";
-      } else {
-        window.location.href="teacher-setup.html";
-      }
-    } else {
       if(data.role==="student"){
         window.location.href="student-home.html";
       } else {
