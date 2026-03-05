@@ -82,6 +82,7 @@ button:hover{ background:#0a1fb0; }
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
 
 <script>
 const firebaseConfig = {
@@ -94,47 +95,67 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-document.getElementById("loginBtn").addEventListener("click", async () => {
+document.getElementById("loginBtn").addEventListener("click", async function () {
 
-  const email = email.value;
-  const password = password.value;
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-  try{
-    const userCred = await auth.signInWithEmailAndPassword(email,password);
+  if (!email || !password) {
+    alert("Please enter email and password.");
+    return;
+  }
+
+  try {
+
+    // 🔐 Login user
+    const userCred = await auth.signInWithEmailAndPassword(email, password);
     const user = userCred.user;
+    const uid = user.uid;
 
-    const docRef = db.collection("users").doc(user.uid);
+    console.log("User UID:", uid);
+
+    // 📄 Get user document
+    const docRef = db.collection("users").doc(uid);
     const doc = await docRef.get();
 
-    // First login
-    if(!doc.exists){
+    let role = "student"; // default role
 
-      let role = email.includes("teacher") ? "teacher" : "student";
+    if (doc.exists) {
+      role = doc.data().role || "student";
+    } else {
+      // If no document exists, create one
+      if (email.includes("teacher")) {
+        role = "teacher";
+      }
 
       await docRef.set({
         role: role,
-        profileCompleted:false,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-
-      if(role==="student"){
-        window.location.href="student-setup.html";
-      } else {
-        window.location.href="teacher-setup.html";
-      }
-      return;
     }
 
-    const data = doc.data();
+    console.log("User Role:", role);
 
-      if(data.role==="student"){
-        window.location.href="student-home.html";
-      } else {
-        window.location.href="teacher-home.html";
-      }
+    // ✅ ALWAYS redirect to student home
+    window.location.href = "student-home.html";
+
+  } catch (error) {
+    alert(error.code + " : " + error.message);
+    console.log(error);
+  }
+
+});
+</script>
+
+</body>
+</html>r-setup.html";
+    } else {
+      // Otherwise, go to respective home page
+      window.location.href = data.role === "student" ? "student-home.html" : "teacher-home.html";
     }
 
   }catch(error){
@@ -144,4 +165,18 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 </script>
 
 </body>
-</html> 
+</html>/script>
+
+</body>
+</html>
+} catch (error) {
+   alert(error.code + " : " + error.message);
+   console.log(error);
+  });
+</script>
+
+</body>
+</html>
+
+</body>
+</html>
