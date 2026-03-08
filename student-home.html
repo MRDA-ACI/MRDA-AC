@@ -211,7 +211,7 @@ body{
     Calendar
   </button>
 
-  <button class="active" onclick="go('student-home.html')">
+  <button class="active">
     <span>🏠</span>
     Home
   </button>
@@ -250,7 +250,7 @@ auth.onAuthStateChanged(async user=>{
   const doc = await db.collection("users").doc(user.uid).get();
 
   if(doc.data().role !== "student"){
-    window.location.href="../teacher/home.html";
+    window.location.href="../teacher-home.html";
   }
 
   loadAnnouncement();
@@ -287,26 +287,6 @@ function loadAnnouncement(){
   });
 }
 
-/* NEWS POSTS */
-function loadPosts(){
-  db.collection("posts")
-  .where("category","==","news")
-  .orderBy("timestamp","desc")
-  .onSnapshot(snapshot=>{
-    feed.innerHTML="";
-    snapshot.forEach(doc=>{
-      const data = doc.data();
-      feed.innerHTML+=`
-        <div class="post">
-          <b>${data.authorName}</b><br>
-          ${data.content}
-          ${data.imageUrl?`<img src="${data.imageUrl}">`:``}
-        </div>
-      `;
-    });
-  });
-}
-
 /* MENU */
 function openMenu(){
   document.getElementById("sideMenu").classList.add("open");
@@ -333,4 +313,36 @@ window.addEventListener("scroll", function(){
 </script>
 
 </body>
-</html>
+</html>eMenu(){
+  document.getElementById("sideMenu").classList.remove("open");
+  document.getElementById("overlay").classList.remove("show");
+}
+
+function go(page){
+  window.location.href=page;
+}
+
+/* SHRINK HEADER */
+window.addEventListener("scroll", function(){
+  if(window.scrollY > 50){
+    document.getElementById("header").classList.add("shrink");
+  }else{
+    document.getElementById("header").classList.remove("shrink");
+  }
+});
+</script>
+
+</body>
+</html></script>
+
+</body>
+</html>remove("shrink");
+  }
+});
+</script>
+
+</body>
+</html>>ript>
+
+</body>
+</html>/html>

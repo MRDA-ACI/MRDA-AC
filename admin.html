@@ -80,7 +80,7 @@ body{
   background:white;
   color:black;
   border-radius:16px;
-  padding:15px;
+  padding:20px;
   margin-top:-10px;
   box-shadow:0 5px 15px rgba(0,0,0,0.2);
   align-items:center;
@@ -170,7 +170,6 @@ body{
 
 <!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
-  <a href="home.html">📰 News</a>
   <a href="history.html">🏫 School History</a>
   <a href="policy.html">📜 Policy</a>
   <a href="admin.html" class="active">👔 School Admin</a>
@@ -194,14 +193,27 @@ body{
 <!-- CONTENT -->
 <div class="feed">
   <div class="container" style="text-align:center;">
+    <br>
     <img src="admin.jpg" style="width:120px; height:120px; border-radius:50%; object-fit:cover;">
-    <h3>Mrs. Elaine A. Daliva</h3>
+    <h2>Mrs. Elaine A. Daliva<br>School Administrator</h2>
     <p>
       Welcome, dear students. I’m glad to share with you what our school strives to achieve for our learners and community. 
       We remain committed to providing a supportive environment where students can grow, develop their skills, and build a strong foundation for their future. 
       Your support and interest help us continue this mission with purpose and dedication.
     </p>
   </div>
+  <br>
+  <div class="container" style="text-align:center;">
+    <h3>Master of Arts in Education<br>Major in Educational Leadership and Management</h3>
+    </div>
+  <br>
+   <div class="container" style="text-align:center;">
+    <h3>Bachelor in Secondary Education<br>Major in English</h3>
+   </div>
+   <br>
+   <div class="container">
+   <p>Information retrieved from <a href="https://pr2group1.github.io/mrda-aci.com/index.html" target="_blank">MRDA ACI Portal</a></p>
+   </div>
 </div>
 
 <!-- FOOTER NAV -->
@@ -216,14 +228,14 @@ body{
     Calendar
   </button>
 
-  <button class="active" onclick="go('home.html')">
+  <button onclick="go('student-home.html')">
     <span>🏠</span>
     Home
   </button>
 
-  <button onclick="go('messages.html')">
-    <span>💬</span>
-    Messages
+  <button onclick="go('notepad.html')">
+    <span>📝</span>
+    Notepad
   </button>
 
   <button onclick="go('profile.html')">
@@ -262,48 +274,33 @@ auth.onAuthStateChanged(async user=>{
   loadPosts();
 });
 
-/* ANNOUNCEMENT (Pinned from Calendar Events) */
-function loadAnnouncement(){
-  const today = new Date();
-
-  db.collection("events")
-  .where("date", ">=", today)
-  .orderBy("date","asc")
-  .limit(1)
-  .onSnapshot(snapshot=>{
-    if(snapshot.empty){
-      document.getElementById("announcement").innerHTML="";
-      return;
-    }
-
-    snapshot.forEach(doc=>{
-      const data = doc.data();
-
-      document.getElementById("announcement").innerHTML=`
-        <div class="announcement-card">
-          📌 <strong>Upcoming Event</strong><br><br>
-          <b>${data.title}</b><br>
-          📅 ${new Date(data.date.toDate()).toDateString()}<br>
-          📍 ${data.location || "School Grounds"}<br><br>
-          ${data.description}
-        </div>
-      `;
-    });
-  });
+/* MENU */
+function openMenu(){
+  document.getElementById("sideMenu").classList.add("open");
+  document.getElementById("overlay").classList.add("show");
 }
 
-/* NEWS POSTS */
-function loadPosts(){
-  db.collection("posts")
-  .where("category","==","news")
-  .orderBy("timestamp","desc")
-  .onSnapshot(snapshot=>{
-    feed.innerHTML="";
-    snapshot.forEach(doc=>{
-      const data = doc.data();
-      feed.innerHTML+=`
-        <div class="post">
-          <b>${data.authorName}</b><br>
+function closeMenu(){
+  document.getElementById("sideMenu").classList.remove("open");
+  document.getElementById("overlay").classList.remove("show");
+}
+
+function go(page){
+  window.location.href=page;
+}
+
+/* SHRINK HEADER */
+window.addEventListener("scroll", function(){
+  if(window.scrollY > 50){
+    document.getElementById("header").classList.add("shrink");
+  }else{
+    document.getElementById("header").classList.remove("shrink");
+  }
+});
+</script>
+
+</body>
+</html>ame}</b><br>
           ${data.content}
           ${data.imageUrl?`<img src="${data.imageUrl}">`:``}
         </div>
