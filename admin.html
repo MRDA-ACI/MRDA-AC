@@ -267,7 +267,7 @@ auth.onAuthStateChanged(async user=>{
   const doc = await db.collection("users").doc(user.uid).get();
 
   if(doc.data().role !== "student"){
-    window.location.href="../teacher/home.html";
+    window.location.href="../teacher-home.html";
   }
 
   loadAnnouncement();
