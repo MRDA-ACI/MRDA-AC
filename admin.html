@@ -300,39 +300,4 @@ window.addEventListener("scroll", function(){
 </script>
 
 </body>
-</html>ame}</b><br>
-          ${data.content}
-          ${data.imageUrl?`<img src="${data.imageUrl}">`:``}
-        </div>
-      `;
-    });
-  });
-}
-
-/* MENU */
-function openMenu(){
-  document.getElementById("sideMenu").classList.add("open");
-  document.getElementById("overlay").classList.add("show");
-}
-
-function closeMenu(){
-  document.getElementById("sideMenu").classList.remove("open");
-  document.getElementById("overlay").classList.remove("show");
-}
-
-function go(page){
-  window.location.href=page;
-}
-
-/* SHRINK HEADER */
-window.addEventListener("scroll", function(){
-  if(window.scrollY > 50){
-    document.getElementById("header").classList.add("shrink");
-  }else{
-    document.getElementById("header").classList.remove("shrink");
-  }
-});
-</script>
-
-</body>
 </html>
