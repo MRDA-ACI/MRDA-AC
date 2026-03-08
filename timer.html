@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Study Timer</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f2f4ff;
+}
+
+/* HEADER */
+
+.header{
+height:170px;
+background:url("school.jpg") center/cover no-repeat;
+transition:0.3s;
+position:relative;
+}
+
+.header.shrink{
+height:90px;
+}
+
+.menu-btn{
+position:absolute;
+top:15px;
+left:15px;
+font-size:28px;
+color:white;
+cursor:pointer;
+}
+
+/* SCHOOL BOX */
+
+.school-box{
+background:white;
+width:80%;
+margin:-20px auto 10px auto;
+padding:5px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.15);
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.logo{
+width:50px;
+}
+
+/* MAIN */
+
+.feed{
+padding:15px;
+padding-bottom:120px;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+/* TIMER */
+
+.timer-box{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.15);
+width:90%;
+max-with:420px;
+text-align:center;
+}
+
+.timer-container{
+position:relative;
+width:240px;
+height:240px;
+margin:auto;
+border-radius:50%;
+background:#eef1ff;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.timer-number{
+position:absolute;
+font-size:32px;
+font-weight:bold;
+color:#1e3cff;
+}
+
+/* SEGMENTS */
+
+.segment{
+position:absolute;
+width:6px;
+height:25px;
+background:#1e3cff;
+border-radius:4px;
+opacity:0.2;
+transform-origin:bottom center;
+transition:opacity 0.4s ease;
+}
+
+.segment.active{
+opacity:1;
+}
+
+/* BUTTONS */
+
+.controls button{
+margin:6px;
+padding:10px 16px;
+border:none;
+border-radius:10px;
+background:#1e3cff;
+color:white;
+cursor:pointer;
+}
+
+/* SETTINGS */
+
+.setup{
+margin-top:15px;
+background:#f0f4ff;
+padding:10px;
+border-radius:10px;
+}
+
+.setup input{
+width:50px;
+}
+
+/* STATS */
+
+.stats{
+margin-top:15px;
+text-align:left;
+}
+
+/* HEATMAP */
+
+.heatmap{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:4px;
+margin-top:10px;
+}
+
+.day{
+width:18px;
+height:18px;
+border-radius:4px;
+background:#ddd;
+}
+
+.day.level1{background:#9be9a8;}
+.day.level2{background:#40c463;}
+.day.level3{background:#30a14e;}
+.day.level4{background:#216e39;}
+
+.heatmap-info{
+display:none;
+padding:10px;
+font-size:13px;
+border-top:1px solid #ddd;
+}
+
+/* STREAK */
+
+.streak-calendar{
+margin-top:10px;
+font-size:13px;
+}
+
+/* NAVBAR */
+
+.navbar{
+position:fixed;
+bottom:0;
+width:100%;
+height:75px;
+background:white;
+display:flex;
+justify-content:space-around;
+align-items:center;
+border-top:1px solid #ddd;
+}
+
+.navbar button{
+border:none;
+background:none;
+font-size:11px;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+.navbar span{
+font-size:24px;
+}
+
+.navbar .active{
+color:#1e3cff;
+}
+
+/* SESSION ANIMATION */
+
+.complete{
+animation:pop 0.6s ease;
+}
+
+@keyframes pop{
+0%{transform:scale(1)}
+50%{transform:scale(1.15)}
+100%{transform:scale(1)}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="feed">
+
+<div class="timer-box">
+
+<h2 id="modeLabel">Study Session</h2>
+
+<div class="timer-container" id="timerContainer">
+<div class="timer-number" id="timerDisplay">25:00</div>
+</div>
+<br>
+<br>
+<div class="controls">
+<button onclick="startTimer()">Start</button>
+<button onclick="pauseTimer()">Pause</button>
+<button onclick="resetTimer()">Reset</button>
+</div>
+
+<div class="setup">
+
+Study <input id="studyTime" type="number" value="25"> min
+
+<br><br>
+
+Short Break <input id="shortBreak" type="number" value="5"> min
+
+<br><br>
+
+Long Break <input id="longBreak" type="number" value="15"> min
+
+<br><br>
+
+Cycles <input id="cycles" type="number" value="4">
+
+</div>
+
+<div class="stats" id="stats"></div>
+
+<h3>Study HeatMap</h3>
+
+<div class="heatmap-info-box">
+
+<div class="heatmap-toggle" onclick="toggleHeatmapInfo()">
+What is the Study Heatmap? ▼
+</div>
+
+<div class="heatmap-info" id="heatmapInfo">
+
+<p><b>About the Heatmap</b></p>
+
+<p>
+The Study Heatmap shows how much you studied each day.
+Each square represents one day of study activity from your completed timer sessions.
+</p>
+
+<p><b>Color Guide</b></p>
+
+<ul>
+<li>⬜ Gray – No study sessions</li>
+<li>🟩 Light Green – Short study time</li>
+<li>🟩🟩 Medium Green – Moderate study time</li>
+<li>🟩🟩🟩 Dark Green – High study time</li>
+</ul>
+
+<p>
+Try to keep your heatmap filled by studying consistently every day to maintain your focus streak.
+</p>
+
+</div>
+
+</div>
+
+<div class="heatmap" id="heatmap"></div>
+
+<h3>Focus Streak</h3>
+<div class="streak-calendar" id="streak"></div>
+
+</div>
+
+</div>
+
+<div class="navbar">
+
+<button class="active"><span>⏱️</span>Timer</button>
+<button onclick="go('calendar.html')"><span>📅</span>Calendar</button>
+<button onclick="go('student-home.html')"><span>🏠</span>Home</button>
+<button onclick="go('notepad.html')"><span>📝</span>Notepad</button>
+<button onclick="go('profile.html')"><span>👤</span>Profile</button>
+
+</div>
+
+<script>
+
+/* TIMER VARIABLES */
+
+let seconds=1500;
+let totalSeconds=1500;
+let mode="study";
+let cycle=0;
+let timer=null;
+
+/* STATS */
+
+let stats=JSON.parse(localStorage.getItem("mrda_stats")) || {
+sessions:0,
+studyMinutes:0,
+daily:{},
+streak:0
+};
+
+/* SEGMENTS */
+
+const container=document.getElementById("timerContainer");
+const totalSegments=60;
+let segments=[];
+
+for(let i=0;i<totalSegments;i++){
+
+let s=document.createElement("div");
+s.className="segment";
+s.style.transform=`rotate(${i*6}deg) translateY(-110px)`;
+
+container.appendChild(s);
+segments.push(s);
+
+}
+
+/* TIMER DISPLAY */
+
+function format(t){
+
+let m=Math.floor(t/60);
+let s=t%60;
+
+return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+
+}
+
+function updateDisplay(){
+
+document.getElementById("timerDisplay").innerText=format(seconds);
+
+let fraction=seconds/totalSeconds;
+let active=Math.ceil(fraction*totalSegments);
+
+segments.forEach((seg,i)=>{
+seg.classList.toggle("active",i<active);
+});
+
+}
+
+/* SOUND */
+
+function beep(){
+
+let ctx=new AudioContext();
+let osc=ctx.createOscillator();
+osc.connect(ctx.destination);
+osc.start();
+osc.stop(ctx.currentTime+0.2);
+
+}
+
+/* TIMER */
+
+function startTimer(){
+
+if(timer) return;
+
+timer=setInterval(()=>{
+
+seconds--;
+updateDisplay();
+
+if(seconds<=0){
+
+completeSession();
+
+}
+
+},1000);
+
+}
+
+function pauseTimer(){
+
+clearInterval(timer);
+timer=null;
+
+}
+
+function resetTimer(){
+
+pauseTimer();
+
+mode="study";
+cycle=0;
+
+seconds=document.getElementById("studyTime").value*60;
+totalSeconds=seconds;
+
+updateDisplay();
+
+}
+
+/* SESSION COMPLETE */
+
+function completeSession(){
+
+beep();
+
+document.querySelector(".timer-container").classList.add("complete");
+
+setTimeout(()=>{
+document.querySelector(".timer-container").classList.remove("complete");
+},600);
+
+if(mode==="study"){
+
+stats.sessions++;
+
+let studyMin=parseInt(document.getElementById("studyTime").value);
+
+stats.studyMinutes+=studyMin;
+
+let today=new Date().toISOString().slice(0,10);
+
+stats.daily[today]=(stats.daily[today]||0)+studyMin;
+
+cycle++;
+
+if(cycle%document.getElementById("cycles").value==0){
+
+mode="long";
+seconds=document.getElementById("longBreak").value*60;
+document.getElementById("modeLabel").innerText="Long Break";
+
+}else{
+
+mode="short";
+seconds=document.getElementById("shortBreak").value*60;
+document.getElementById("modeLabel").innerText="Short Break";
+
+}
+
+}else{
+
+mode="study";
+seconds=document.getElementById("studyTime").value*60;
+document.getElementById("modeLabel").innerText="Study Session";
+
+}
+
+totalSeconds=seconds;
+
+updateStats();
+updateDisplay();
+
+}
+
+/* STATS */
+
+function updateStats(){
+
+localStorage.setItem("mrda_stats",JSON.stringify(stats));
+
+document.getElementById("stats").innerHTML=
+
+`Sessions: ${stats.sessions}<br>
+Total Study Time: ${stats.studyMinutes} minutes`;
+
+renderHeatmap();
+renderStreak();
+
+}
+
+/* HEATMAP */
+
+function renderHeatmap(){
+
+let heat=document.getElementById("heatmap");
+heat.innerHTML="";
+
+for(let i=0;i<35;i++){
+
+let d=new Date();
+d.setDate(d.getDate()-i);
+
+let key=d.toISOString().slice(0,10);
+
+let val=stats.daily[key]||0;
+
+let level=0;
+
+if(val>0) level=1;
+if(val>60) level=2;
+if(val>120) level=3;
+if(val>240) level=4;
+
+let cell=document.createElement("div");
+cell.className="day level"+level;
+
+heat.appendChild(cell);
+
+}
+
+}
+
+function toggleHeatmapInfo(){
+
+let box = document.getElementById("heatmapInfo");
+
+if(box.style.display === "none" || box.style.display === ""){
+box.style.display = "block";
+}else{
+box.style.display = "none";
+}
+
+}
+
+/* STREAK */
+
+function renderStreak(){
+
+let days=Object.keys(stats.daily).sort();
+
+let streak=0;
+
+for(let i=days.length-1;i>=0;i--){
+
+let d=new Date(days[i]);
+let prev=new Date();
+prev.setDate(prev.getDate()-streak);
+
+if(d.toDateString()==prev.toDateString()){
+
+streak++;
+
+}else break;
+
+}
+
+document.getElementById("streak").innerText=
+`Current Focus Streak: ${streak} day(s)`;
+
+}
+
+/* NAVIGATION */
+
+function go(p){
+window.location.href=p;
+}
+
+/* INIT */
+
+seconds=document.getElementById("studyTime").value*60;
+totalSeconds=seconds;
+
+updateDisplay();
+updateStats();
+
+</script>
+
+</body>
+</html>
