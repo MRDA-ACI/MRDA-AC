@@ -170,7 +170,6 @@ body{
 
 <!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
-  <a href="home.html">📰 News</a>
   <a href="history.html">🏫 School History</a>
   <a href="policy.html">📜 Policy</a>
   <a href="admin.html">👔 School Admin</a>
@@ -191,8 +190,44 @@ body{
   <h2>MRDA Academic Center Inc.</h2>
 </div>
 
-<!-- Feed of teachers or students -->
-<div class="feed" id="feed"></div>
+<!-- CONTENT -->
+<div class="feed">
+  <div class="container" style="display: flex; align-items: center; gap: 10px;">
+    <img src="student.jpg" style="width:55px; height:55px; border-radius:50%; object-fit:cover;">
+    <h3 style="margin: 0;">Emerald Dela Cruz Panuelos</h3>
+    <p>Grade 12 — Rizal <br> Science, Technology, Engineering, and Mathematics Strand</p>
+  </div>
+  <br>
+  <div class="container" style="display: flex; align-items: center; gap: 10px;">
+    <img src="student.jpg" style="width:55px; height:55px; border-radius:50%; object-fit:cover;">
+    <h3 style="margin: 0;">Allhan Daliva Irica</h3>
+    <p>Grade 12 — Rizal <br> Science, Technology, Engineering, and Mathematics Strand</p>
+  </div>
+  <br>
+  <div class="container" style="display: flex; align-items: center; gap: 10px;">
+    <img src="student.jpg" style="width:55px; height:55px; border-radius:50%; object-fit:cover;">
+    <h3 style="margin: 0;">Alexa Jane Lacerna Morcilla</h3>
+    <p>Grade 12 — Gomburza <br> Science, Technology, Engineering, and Mathematics Strand</p>
+  </div>
+  <br>
+  <div class="container" style="display: flex; align-items: center; gap: 10px;">
+    <img src="student.jpg" style="width:55px; height:55px; border-radius:50%; object-fit:cover;">
+    <h3 style="margin: 0;">Gichel Mae Metran Raymundo</h3>
+    <p>Grade 12 — Rizal <br> Science, Technology, Engineering, and Mathematics Strand</p>
+  </div>
+  <br>
+  <div class="container" style="display: flex; align-items: center; gap: 10px;">
+    <img src="student.jpg" style="width:55px; height:55px; border-radius:50%; object-fit:cover;">
+    <h3 style="margin: 0;">Lennelle Villania Casida</h3>
+    <p>Grade 12 — Rizal <br> Science, Technology, Engineering, and Mathematics Strand</p>
+  </div>
+  <br>
+  <div class="container" style="display: flex; align-items: center; gap: 10px;">
+    <img src="student.jpg" style="width:55px; height:55px; border-radius:50%; object-fit:cover;">
+    <h3 style="margin: 0;">Joash Llorente</h3>
+    <p>Grade 12 — Rizal <br> Science, Technology, Engineering, and Mathematics Strand</p>
+  </div>
+</div>
 
 <!-- FOOTER NAV -->
 <div class="navbar">
@@ -206,14 +241,14 @@ body{
     Calendar
   </button>
 
-  <button class="active" onclick="go('home.html')">
+  <button onclick="go('student-home.html')">
     <span>🏠</span>
     Home
   </button>
 
-  <button onclick="go('messages.html')">
-    <span>💬</span>
-    Messages
+  <button onclick="go('notepad.html')">
+    <span>📝</span>
+    Notepad
   </button>
 
   <button onclick="go('profile.html')">
@@ -264,62 +299,12 @@ auth.onAuthStateChanged(async user=>{
   const doc = await db.collection("users").doc(user.uid).get();
 
   if(doc.data().role !== "student"){
-    window.location.href="../teacher/home.html";
+    window.location.href="../teacher-home.html";
   }
 
   loadAnnouncement();
   loadPosts();
 });
-
-/* ANNOUNCEMENT (Pinned from Calendar Events) */
-function loadAnnouncement(){
-  const today = new Date();
-
-  db.collection("events")
-  .where("date", ">=", today)
-  .orderBy("date","asc")
-  .limit(1)
-  .onSnapshot(snapshot=>{
-    if(snapshot.empty){
-      document.getElementById("announcement").innerHTML="";
-      return;
-    }
-
-    snapshot.forEach(doc=>{
-      const data = doc.data();
-
-      document.getElementById("announcement").innerHTML=`
-        <div class="announcement-card">
-          📌 <strong>Upcoming Event</strong><br><br>
-          <b>${data.title}</b><br>
-          📅 ${new Date(data.date.toDate()).toDateString()}<br>
-          📍 ${data.location || "School Grounds"}<br><br>
-          ${data.description}
-        </div>
-      `;
-    });
-  });
-}
-
-/* NEWS POSTS */
-function loadPosts(){
-  db.collection("posts")
-  .where("category","==","news")
-  .orderBy("timestamp","desc")
-  .onSnapshot(snapshot=>{
-    feed.innerHTML="";
-    snapshot.forEach(doc=>{
-      const data = doc.data();
-      feed.innerHTML+=`
-        <div class="post">
-          <b>${data.authorName}</b><br>
-          ${data.content}
-          ${data.imageUrl?`<img src="${data.imageUrl}">`:``}
-        </div>
-      `;
-    });
-  });
-}
 
 /* MENU */
 function openMenu(){
