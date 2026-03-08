@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Calendar</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f2f4ff;padding-bottom:90px;}
+.header{height:170px;background:url('school.jpg') center/cover no-repeat;position:relative;transition:0.3s;}
+.header.shrink{height:90px;}
+.menu-btn{position:absolute;top:15px;left:15px;font-size:28px;color:white;cursor:pointer;}
+/* SIDE MENU */
+.side-menu{
+  position:fixed;
+  top:0;
+  left:-260px;
+  width:250px;
+  height:100%;
+  background:white;
+  box-shadow:3px 0 10px rgba(0,0,0,0.2);
+  padding-top:60px;
+  transition:0.3s;
+  z-index:1000;
+}
+.side-menu a{
+  display:block;
+  padding:15px 20px;
+  text-decoration:none;
+  color:#333;
+  border-bottom:1px solid #eee;
+}
+.side-menu a.active{
+  background:#e8ecff;
+  font-weight:bold;
+  color:#1e3cff;
+}
+.side-menu a:hover{ background:#f2f4ff; }
+.side-menu.open{ left:0; }
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.3);
+  display:none;
+  z-index:900;
+}
+.overlay.show{ display:block; }
+.school-box{position:relative;background:white;width:80%;margin:-20px auto 10px auto;padding:5px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.15);display:flex;align-items:center;gap:15px;}
+.logo{width:50px;height:auto;}
+.school-box h2{margin:0;font-size:16px;font-weight:600;}
+.calendar{background:white;border-radius:16px;padding:15px;margin:15px;box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+.month{text-align:center;font-weight:bold;margin-bottom:10px;}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+.day{text-align:center;padding:10px 0;border-radius:8px;cursor:pointer;background:#eef1ff;}
+.day.event{background:#ffcc00;color:black;font-weight:bold;}
+.day.personal{background:#90ee90;color:black;font-weight:bold;}
+.day.mixed{background:linear-gradient(to right,#ffcc00 50%,#90ee90 50%);color:black;font-weight:bold;}
+.today{border:2px solid #1e3cff;font-weight:bold;}
+#allEvents,#selectedEvents{background:white;border-radius:16px;padding:15px;margin:15px;max-height:300px;overflow-y:auto;box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+.event-card{background:#f0f0f0;padding:10px;border-radius:10px;margin-bottom:10px;}
+.event-card.personal{background:#d1f7d1;}
+.navbar{position:fixed;bottom:0;width:100%;height:75px;background:white;display:flex;justify-content:space-around;align-items:center;border-top:1px solid #ddd;}
+.navbar button{background:none;border:none;color:#555;font-size:11px;display:flex;flex-direction:column;align-items:center;cursor:pointer;}
+.navbar button span{font-size:24px;margin-bottom:3px;}
+.navbar .active{
+  color:#1e3cff;
+}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;justify-content:center;align-items:center;}
+.modal-content{background:white;padding:20px;border-radius:16px;width:80%;}
+.modal-content input,.modal-content textarea{width:100%;margin-bottom:10px;padding:8px;border-radius:8px;border:1px solid #ccc;}
+</style>
+</head>
+<body>
+
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <a href="history.html">🏫 School History</a>
+  <a href="policy.html">📜 Policy</a>
+  <a href="admin.html">👔 School Admin</a>
+  <a href="teachers.html">👩‍🏫 Teachers</a>
+  <a href="students.html">🎓 Students</a>
+</div>
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+<div class="page-container">
+
+<!-- HEADER -->
+<div class="header" id="header">
+  <div class="menu-btn" onclick="openMenu()">☰</div>
+</div>
+
+<div class="school-box">
+  <img src="logo.png" class="logo">
+  <h2>MRDA Academic Center Inc.</h2>
+</div>
+
+<div class="calendar">
+  <div class="month" id="monthYear"></div>
+  <div class="days" id="calendarDays"></div>
+</div>
+
+<div id="allEvents"><h3>All Events</h3></div>
+<div id="selectedEvents"><h3>Click a date to see events</h3></div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3>Add Personal Event</h3>
+    <input type="text" id="eventTitle" placeholder="Title">
+    <textarea id="eventDetails" placeholder="Details"></textarea>
+    <button onclick="savePersonalEvent()">Save</button>
+    <button onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<div class="navbar">
+  <button onclick="go('timer.html')"><span>⏱️</span>Timer</button>
+  <button class="active"><span>📅</span>Calendar</button>
+  <button onclick="go('student-home.html')"><span>🏠</span>Home</button>
+  <button onclick="go('notepad.html')"><span>📝</span>Notepad</button>
+  <button onclick="go('profile.html')"><span>👤</span>Profile</button>
+</div>
+
+<script>
+// Official events (static)
+const officialEvents = {
+  "2026-03-02": { title:"Clearance Period", details:"Submission of all academic requirements." },
+  "2026-03-07": { title:"Recollection Day", details:"Grades 6,10,12" },
+  "2026-03-09": { title:"Final Exam", details:"All levels" },
+  "2026-03-13": { title:"Deliberation of Honors", details:"" },
+  "2026-03-16": { title:"Graduation Practices", details:"" }
+};
+
+// Personal events stored in localStorage
+let personalEvents = JSON.parse(localStorage.getItem("personalEvents")) || {};
+
+// Combine both official and personal events for rendering
+function getEventsForDate(dateKey){
+  const events = {official: officialEvents[dateKey] || null, personal: personalEvents[dateKey] || []};
+  return events;
+}
+
+// ---------------- CALENDAR -------------------
+const today = new Date();
+const year = today.getFullYear();
+const month = today.getMonth();
+const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+function renderCalendar(){
+  document.getElementById("monthYear").innerText = monthNames[month]+" "+year;
+  const calendar = document.getElementById("calendarDays");
+  calendar.innerHTML = "";
+
+  const dayHeaders = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  dayHeaders.forEach(d=>{ const div=document.createElement("div"); div.innerHTML="<b>"+d+"</b>"; calendar.appendChild(div); });
+
+  const firstDay = new Date(year,month,1).getDay();
+  const lastDate = new Date(year,month+1,0).getDate();
+
+  for(let i=0;i<firstDay;i++) calendar.appendChild(document.createElement("div"));
+
+  for(let day=1;day<=lastDate;day++){
+    const div=document.createElement("div");
+    div.classList.add("day");
+    div.innerText=day;
+    const dateKey = year+"-"+String(month+1).padStart(2,"0")+"-"+String(day).padStart(2,"0");
+
+    const dayEvents = getEventsForDate(dateKey);
+    if(dayEvents.official && dayEvents.personal.length) div.classList.add("mixed");
+    else if(dayEvents.official) div.classList.add("event");
+    else if(dayEvents.personal.length) div.classList.add("personal");
+    if(day===today.getDate()) div.classList.add("today");
+
+    div.onclick = ()=> selectDate(dateKey);
+    calendar.appendChild(div);
+  }
+}
+
+// ------------- ALL EVENTS --------------------
+function renderAllEvents(){
+  const container = document.getElementById("allEvents");
+  container.innerHTML = "<h3>All Events</h3>";
+  const allDates = new Set([...Object.keys(officialEvents), ...Object.keys(personalEvents)]);
+  Array.from(allDates).sort().forEach(date=>{
+    const dayEvents = getEventsForDate(date);
+    if(dayEvents.official) container.innerHTML += `<div class="event-card"><b>${dayEvents.official.title}</b><br>${dayEvents.official.details}<br><i>${date}</i></div>`;
+    dayEvents.personal.forEach(ev=>container.innerHTML += `<div class="event-card personal"><b>${ev.title}</b><br>${ev.details}<br><i>${date}</i></div>`);
+  });
+}
+
+// ------------- SELECT DATE -------------------
+function selectDate(dateKey){
+  const container = document.getElementById("selectedEvents");
+  container.innerHTML = `<h3>Events for ${dateKey}</h3>`;
+  const dayEvents = getEventsForDate(dateKey);
+  if(dayEvents.official) container.innerHTML += `<div class="event-card"><b>${dayEvents.official.title}</b><br>${dayEvents.official.details}</div>`;
+  dayEvents.personal.forEach(ev=>container.innerHTML += `<div class="event-card personal"><b>${ev.title}</b><br>${ev.details}</div>`);
+  if(!dayEvents.official && dayEvents.personal.length===0) container.innerHTML += "<div>No events</div>";
+
+  // Open modal to add personal event
+  document.getElementById("modal").style.display="flex";
+  document.getElementById("modal").dataset.date = dateKey;
+}
+
+// ------------------ MODAL ------------------
+function savePersonalEvent(){
+  const title = document.getElementById("eventTitle").value;
+  const details = document.getElementById("eventDetails").value;
+  const dateKey = document.getElementById("modal").dataset.date;
+
+  if(!events[dateKey]) events[dateKey] = {};
+  if(!events[dateKey].personal) events[dateKey].personal = [];
+  events[dateKey].personal.push({title,details});
+
+  localStorage.setItem("events", JSON.stringify(events));
+  closeModal();
+  renderCalendar();
+  renderAllEvents();
+  selectDate(dateKey);
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+  document.getElementById("eventTitle").value="";
+  document.getElementById("eventDetails").value="";
+}
+
+// ------------------ NAV & SIDEBAR ------------------
+function go(page){ window.location.href=page; }
+function openMenu(){
+  document.getElementById("sideMenu").classList.add("open");
+  document.getElementById("overlay").classList.add("show");
+}
+function closeMenu(){
+  document.getElementById("sideMenu").classList.remove("open");
+  document.getElementById("overlay").classList.remove("show");
+}
+
+// ------------------ INIT ------------------
+renderCalendar();
+renderAllEvents();
+
+</script>
+</body>
+</html>
