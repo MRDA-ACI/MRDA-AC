@@ -1,164 +1,303 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MRDA AcademeAccess Home</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Profile</title>
 
-  <!-- PWA manifest -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1e3cff">
+<style>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #0a1fb0, #1e3cff);
-      color: white;
-      min-height: 100vh;
-    }
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f2f4ff;
+}
 
-    /* Sidebar styling */
-    .sidebar {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background-color: #1e3cff;
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-    }
+/* HEADER */
 
-    .sidebar a {
-      padding: 10px 15px;
-      text-decoration: none;
-      font-size: 18px;
-      color: white;
-      display: block;
-      transition: 0.3s;
-    }
+.header{
+  height:170px;
+  background:url('school.jpg') center/cover no-repeat;
+  position:relative;
+  transition:0.3s;
+}
 
-    .sidebar a:hover {
-      background-color: #0a1fb0;
-    }
+.header.shrink{
+  height:90px;
+}
 
-    .sidebar .closebtn {
-      position: absolute;
-      top: 15px;
-      right: 25px;
-      font-size: 30px;
-      margin-left: 50px;
-      cursor: pointer;
-    }
+/* MENU BUTTON */
 
-    /* Main content */
-    .main {
-      padding: 20px;
-      transition: margin-left 0.3s;
-      margin-left: 0;
-    }
+.menu-btn{
+  position:absolute;
+  top:15px;
+  left:15px;
+  font-size:28px;
+  color:white;
+  cursor:pointer;
+}
 
-    /* Hamburger menu */
-    .openbtn {
-      font-size: 24px;
-      cursor: pointer;
-      background-color: #1e3cff;
-      color: white;
-      border: none;
-      padding: 15px;
-      position: fixed;
-      top: 15px;
-      left: 15px;
-    }
+/* SCHOOL INFO */
 
-    .history {
-      background: white;
-      color: #1e3cff;
-      padding: 20px;
-      border-radius: 12px;
-      margin-top: 60px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
+.school-box{
+  position:relative;
+  background:white;
+  width:80%;
+  margin:-20px auto 10px auto;
+  padding:5px;
+  border-radius:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.15);
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
 
-    @media (max-width: 600px) {
-      .history {
-        margin-top: 80px;
-      }
-    }
-  </style>
+.logo{
+  width:50px;
+}
+
+.school-box h2{
+  margin:0;
+  font-size:16px;
+}
+
+/* CONTENT AREA */
+
+.feed{
+  padding:15px;
+  padding-bottom:120px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* LOGOUT CARD */
+
+.profile-card{
+  background:white;
+  width:100%;
+  max-width:400px;
+  padding:30px;
+  border-radius:15px;
+  text-align:center;
+  box-shadow:0 5px 15px rgba(0,0,0,0.15);
+}
+
+.logout-btn{
+  background:#ff4d4d;
+  color:white;
+  border:none;
+  padding:14px;
+  border-radius:12px;
+  width:100%;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.logout-btn:hover{
+  background:#e60000;
+}
+
+/* NAVBAR */
+
+.navbar{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  height:75px;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  border-top:1px solid #ddd;
+}
+
+.navbar button{
+  background:none;
+  border:none;
+  color:#555;
+  font-size:11px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  cursor:pointer;
+}
+
+.navbar button span{
+  font-size:24px;
+}
+
+.navbar .active{
+  color:#1e3cff;
+}
+
+/* SIDE MENU */
+
+.side-menu{
+  position:fixed;
+  top:0;
+  left:-260px;
+  width:250px;
+  height:100%;
+  background:white;
+  box-shadow:3px 0 10px rgba(0,0,0,0.2);
+  padding-top:60px;
+  transition:0.3s;
+  z-index:1000;
+}
+
+.side-menu a{
+  display:block;
+  padding:15px 20px;
+  text-decoration:none;
+  color:#333;
+  border-bottom:1px solid #eee;
+}
+
+.side-menu a.active{
+  background:#e8ecff;
+  font-weight:bold;
+  color:#1e3cff;
+}
+
+.side-menu a:hover{
+  background:#f2f4ff;
+}
+
+.side-menu.open{
+  left:0;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.3);
+  display:none;
+}
+
+.overlay.show{
+  display:block;
+}
+
+</style>
 </head>
+
 <body>
 
-<button class="openbtn" onclick="openNav()">☰ Menu</button>
+<!-- SIDE MENU -->
 
-<div class="sidebar" id="mySidebar">
-  <span class="closebtn" onclick="closeNav()">&times;</span>
-  <a href="student.html">Dashboard</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="schedule.html">Schedule</a>
-  <a href="zoom.html">Zoom Meetings</a>
-  <a href="messages.html">Messages</a>
-  <a href="study-timer.html">Study Timer</a>
-  <a href="mentalhealth.html">Mental Health</a>
-  <a href="profile.html">Profile</a>
-  <a href="index.html" onclick="logout()">Logout</a>
+<div class="side-menu" id="sideMenu">
+  <a href="history.html">🏫 School History</a>
+  <a href="policy.html">📜 Policy</a>
+  <a href="admin.html">👔 School Admin</a>
+  <a href="teachers.html">👩‍🏫 Teachers</a>
+  <a href="students.html">🎓 Students</a>
 </div>
 
-<div class="main">
-  <div class="history">
-    <h2>Welcome to MRDA AcademeAccess</h2>
-    <p>
-      MRDA Academic Center Inc. was established in 2018 in Calabanga, Camarines Sur. 
-      With a commitment to excellence, the institution has grown into a beacon of education, 
-      empowering students from diverse backgrounds to reach their full potential. 
-      Our mission is to foster holistic development, ensuring each learner excels academically, 
-      socially, and personally.
-    </p>
-  </div>
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+<!-- HEADER -->
+
+<div class="header" id="header">
+  <div class="menu-btn" onclick="openMenu()">☰</div>
 </div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<!-- SCHOOL INFO -->
+
+<div class="school-box">
+  <img src="logo.png" class="logo">
+  <h2>MRDA Academic Center Inc.</h2>
+</div>
+
+<!-- PROFILE CONTENT -->
+
+<div class="feed">
+
+<div class="profile-card">
+
+<h3>Student Account</h3>
+
+<p>You are currently logged in.</p>
+
+<button class="logout-btn" onclick="logout()">Logout</button>
+
+</div>
+
+</div>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<button onclick="go('timer.html')">
+<span>⏱️</span>
+Study Timer
+</button>
+
+<button onclick="go('calendar.html')">
+<span>📅</span>
+Calendar
+</button>
+
+<button onclick="go('student-home.html')">
+<span>🏠</span>
+Home
+</button>
+
+<button onclick="go('notepad.html')">
+<span>📝</span>
+Notepad
+</button>
+
+<button class="active" onclick="go('profile.html')">
+<span>👤</span>
+Profile
+</button>
+
+</div>
 
 <script>
-  // Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyAtBlO4Iwj5TMYlvwQeENndd7fcV-lyXl4",
-    authDomain: "mrda-pwa.firebaseapp.com",
-    projectId: "mrda-pwa",
-    storageBucket: "mrda-pwa.appspot.com",
-    messagingSenderId: "59701076462",
-    appId: "1:59701076462:web:be714b43e3f04d61c32eff",
-    measurementId: "G-VDJW06X9PH"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
 
-  auth.onAuthStateChanged(user => {
-    if (!user) {
-      window.location.href = "index.html";
-    }
-  });
+/* LOGOUT FUNCTION */
 
-  function openNav() {
-    document.getElementById("mySidebar").style.width = "250px";
-    document.querySelector(".main").style.marginLeft = "250px";
-  }
+function logout(){
 
-  function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-    document.querySelector(".main").style.marginLeft = "0";
-  }
+localStorage.removeItem("mrda_logged_in");
 
-  function logout() {
-    auth.signOut().then(() => {
-      window.location.href = "index.html";
-    });
-  }
+window.location.href = "index.html";
+
+}
+
+/* MENU */
+
+function openMenu(){
+document.getElementById("sideMenu").classList.add("open");
+document.getElementById("overlay").classList.add("show");
+}
+
+function closeMenu(){
+document.getElementById("sideMenu").classList.remove("open");
+document.getElementById("overlay").classList.remove("show");
+}
+
+function go(page){
+window.location.href = page;
+}
+
+/* SHRINK HEADER */
+
+window.addEventListener("scroll", function(){
+
+if(window.scrollY > 50){
+document.getElementById("header").classList.add("shrink");
+}
+else{
+document.getElementById("header").classList.remove("shrink");
+}
+
+});
+
 </script>
 
 </body>
